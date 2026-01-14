@@ -117,6 +117,7 @@ async def on_guild_remove(guild: discord.Guild):
         app_commands.Choice(name="Evening (PM)", value="PM"),
     ]
 )
+@app_commands.checks.has_permissions(administrator=True)
 async def initialize_command(interaction: discord.Interaction, time: str, timezone: str,
                              channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
@@ -187,6 +188,7 @@ async def timezone_autocomplete(interaction: Interaction, current: str):
     timezone="The timezone the server is in.",
     channel="The channel to send the messages in."
 )
+@app_commands.checks.has_permissions(administrator=True)
 async def edit_command(interaction: discord.Interaction, time: str = None, timezone: str = None,
                        channel: discord.TextChannel = None):
     pass
@@ -195,6 +197,7 @@ async def edit_command(interaction: discord.Interaction, time: str = None, timez
 # --- Remove Command ---
 @client.tree.command(name="remove-server",
                      description="Run this to disable the bot. Also occurs when kicking bot from the server.")
+@app_commands.checks.has_permissions(administrator=True)
 async def remove_command(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
     for server in servers:
@@ -215,6 +218,16 @@ async def remove_command(interaction: discord.Interaction):
         color=discord.Colour.red()
     ))
 
+
+# --- Error Handling ---
+@initialize_command.error
+@edit_command.error
+@remove_command.error
+async def error_handler(interaction: discord.Interaction, error):
+    if isinstance(error, app_commands.MissingPermissions):
+        await interaction.response.send_message("You do not have permissions to do that.", ephemeral=True)
+    else:
+        await interaction.response.send_message("An error has occurred!!! DM OccultParrot if you can!", ephemeral=True)
 
 # --- Post Task ---
 async def send_scheduled_messages():

@@ -219,10 +219,25 @@ async def remove_command(interaction: discord.Interaction):
     ))
 
 
+@client.tree.command(name="send-daily",
+                     description="Run this to send the dino message to the server")
+@app_commands.checks.has_permissions(administrator=True)
+async def send_daily(interaction: discord.Interaction):
+    await interaction.response.defer(thinking=True, ephemeral=True)
+    for server in servers:
+        if server.get("guild_id") == interaction.guild.id:
+            await client.get_channel(server.get("channel_id")).send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))
+            await interaction.edit_original_response(embed=Embed(title="Successfully Sent Dino Message!", description="Check the channel to see the new message"))
+            return
+
+    await interaction.edit_original_response(embed=Embed(title="Server not set up", description="Hmm, the server is not quite set up, try running `/initialize`!"))
+
+
 # --- Error Handling ---
 @initialize_command.error
 @edit_command.error
 @remove_command.error
+@send_daily.error
 async def error_handler(interaction: discord.Interaction, error):
     if isinstance(error, app_commands.MissingPermissions):
         await interaction.response.send_message("You do not have permissions to do that.", ephemeral=True)

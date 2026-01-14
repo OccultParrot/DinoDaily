@@ -24,7 +24,7 @@ def get_servers():
                 "guild_id": guild_id,
                 "channel_id": channel_id,
                 "scheduled_time": scheduled_time,
-                "time_zone": time_zone,
+                "time_zone": ZoneInfo(time_zone),
                 "added_at": added_at,
                 "edited_at": edited_at
             } for

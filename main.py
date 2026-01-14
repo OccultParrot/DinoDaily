@@ -227,10 +227,12 @@ async def send_daily(interaction: discord.Interaction):
     for server in servers:
         if server.get("guild_id") == interaction.guild.id:
             await client.get_channel(server.get("channel_id")).send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))
-            await interaction.edit_original_response(embed=Embed(title="Successfully Sent Dino Message!", description="Check the channel to see the new message"))
+            await interaction.edit_original_response(embed=Embed(title="Successfully Sent Dino Message!",
+                                                                 description="Check the channel to see the new message"))
             return
 
-    await interaction.edit_original_response(embed=Embed(title="Server not set up", description="Hmm, the server is not quite set up, try running `/initialize`!"))
+    await interaction.edit_original_response(embed=Embed(title="Server not set up",
+                                                         description="Hmm, the server is not quite set up, try running `/initialize`!"))
 
 
 # --- Error Handling ---
@@ -243,6 +245,7 @@ async def error_handler(interaction: discord.Interaction, error):
         await interaction.response.send_message("You do not have permissions to do that.", ephemeral=True)
     else:
         await interaction.response.send_message("An error has occurred!!! DM OccultParrot if you can!", ephemeral=True)
+
 
 # --- Post Task ---
 async def send_scheduled_messages():

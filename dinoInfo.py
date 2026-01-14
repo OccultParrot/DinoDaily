@@ -16,7 +16,7 @@ def get_dino_fact_embeds(dino: dict) -> List[Embed]:
     ),
         Embed(
             title=f"Information",
-            description=f"[Wikipedia Page]({dino.get('url')}\n\nWant to use this bot on your sever? [Here's the install link!]({os.getenv("BOT_INSTALL")}))"
+            description=f"[Wikipedia Page]({dino.get('url')})\n\nWant to use this bot on your sever? [Here's the install link!]({os.getenv("BOT_INSTALL")})"
         )
     ]
 

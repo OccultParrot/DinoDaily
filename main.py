@@ -272,7 +272,9 @@ async def attempt_daily_send(server):
         current_tuple = (current_time_in_tz.hour, current_time_in_tz.minute)
 
         if current_tuple == scheduled_tuple:
-            await client.get_channel(server.get("channel_id")).send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))
+            channel = client.get_channel(server.get("channel_id"))
+            message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))
+            await message.create_thread(name=f"Discuss {daily_dino.get('name')}")
         print(f"Scheduled: {scheduled_tuple}, Current: {current_tuple}")
 
 

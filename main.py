@@ -81,6 +81,19 @@ async def on_ready():
     asyncio.create_task(send_scheduled_messages())
 
 
+@client.event
+async def on_guild_join(guild: discord.Guild):
+    print(f"[blue]Joining guild {guild.name}!")
+
+    embed = Embed(
+        title="Thanks for having me!",
+        description="Howdy! Thanks for using DinoDaily! To set me up, run `/initialize` in any channel and enter the time you want my daily messages to send!"
+    )
+    embed.set_footer(text="Thanks for trying out DinoDaily! - OccultParrot")
+
+    await guild.system_channel.send(embed=embed)
+
+
 # --- Guild Leave Clean Up ---
 @client.event
 async def on_guild_remove(guild: discord.Guild):
@@ -250,7 +263,8 @@ def parse_daily_dino(dino: dict) -> Optional[Dict]:
     wiki = wikipediaapi.Wikipedia('DinoDaily (stemlertho@gmail.com)', 'en')
     page = wiki.page(dino.get('page_name'))
 
-    soup = BeautifulSoup(requests.get(dino['href'], headers={'User-Agent': 'DinoDaily/1.0 (Testing purposes)'}).text, "html.parser")
+    soup = BeautifulSoup(requests.get(dino['href'], headers={'User-Agent': 'DinoDaily/1.0 (Testing purposes)'}).text,
+                         "html.parser")
     info_box = soup.find("table", {"class": "infobox"})
     img = info_box.find_next('img')
     print(img)
@@ -263,7 +277,7 @@ def parse_daily_dino(dino: dict) -> Optional[Dict]:
         thumbnail_url = "https:" + thumbnail_url
 
     dino_data = {
-        'name':page.title,
+        'name': page.title,
         'url': dino.get('href'),
         'summary': page.summary,
         'thumbnail': thumbnail_url,

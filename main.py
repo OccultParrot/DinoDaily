@@ -261,7 +261,7 @@ async def attempt_daily_send(server):
         return
 
     if server.get("scheduled_time") and server.get("time_zone"):
-        server_tz = server.get("timezone")
+        server_tz = server.get("time_zone")
         current_time_in_tz = datetime.now(server_tz).time()
         scheduled_time = server.get("scheduled_time")
 

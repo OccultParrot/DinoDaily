@@ -29,7 +29,8 @@ import requests
 import database_utils as db
 import dinoInfo
 
-CACHE_REFRESH_INTERVAL = 128
+# Refresh every 5 hours
+CACHE_REFRESH_INTERVAL = 60 * 60 * 5
 servers = []
 daily_dino: dict = {}
 

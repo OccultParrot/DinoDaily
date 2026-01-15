@@ -7,7 +7,7 @@ import dotenv
 
 from rich import print as print
 
-dotenv.load()
+dotenv.load_dotenv()
 
 
 def get_connection():

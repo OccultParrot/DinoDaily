@@ -12,7 +12,7 @@ class DinoPostView(View):
     def __init__(self):
         super().__init__()
 
-    @discord.ui.button(label="Make a suggestion", style=discord.ButtonStyle.blurple)
+    @discord.ui.button(label="Suggest a Change", style=discord.ButtonStyle.blurple)
     async def suggest_callback(self, interaction: discord.Interaction, _):
         await interaction.response.send_modal(SuggestModal())
 

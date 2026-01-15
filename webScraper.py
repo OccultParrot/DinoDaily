@@ -8,7 +8,7 @@ from rich import print as print
 
 from database_utils import get_connection
 
-dotenv.load()
+dotenv.load_dotenv()
 
 headers = {'User-Agent': 'DinoDaily/1.0 (Testing purposes)'}
 

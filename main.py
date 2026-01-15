@@ -23,11 +23,16 @@ from discord import Client, app_commands, Interaction, Embed
 from rich import print as print
 import wikipediaapi
 from urllib3 import request
+import dotenv
+
 
 import requests
 
 import database_utils as db
 import dinoInfo
+import modals_n_views as mv
+
+dotenv.load_dotenv()
 
 CACHE_REFRESH_INTERVAL = 128
 servers = []
@@ -273,7 +278,7 @@ async def attempt_daily_send(server):
 
         if current_tuple == scheduled_tuple:
             channel = client.get_channel(server.get("channel_id"))
-            message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))
+            message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino), view=mv.DinoPostView())
             await message.create_thread(name=f"Discuss {daily_dino.get('name')}")
         print(f"Scheduled: {scheduled_tuple}, Current: {current_tuple}")
 

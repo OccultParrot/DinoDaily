@@ -5,7 +5,7 @@ from discord import Embed
 from typing import List, Dict, Optional
 from graphviz import Digraph
 
-dotenv.load()
+dotenv.load_dotenv()
 
 
 def get_dino_fact_embeds(dino: dict) -> List[Embed]:

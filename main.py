@@ -296,7 +296,8 @@ async def attempt_daily_send(server):
             except Exception as e:
                 print(f"Something went wrong in guild: {client.get_guild(server.get('guild_id')).name}!\n{e}")
 
-        print(f"Scheduled: {scheduled_tuple}, Current: {current_tuple}")
+        print(
+            f"{client.get_guild(server.get('guild_id')).name}'s scheduled time: ({scheduled_tuple})  | Current time: {current_tuple}")
 
 
 async def get_daily_dino_task():

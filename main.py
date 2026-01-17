@@ -25,7 +25,6 @@ import wikipediaapi
 from urllib3 import request
 import dotenv
 
-
 import requests
 
 import database_utils as db
@@ -127,6 +126,14 @@ async def on_guild_remove(guild: discord.Guild):
 async def initialize_command(interaction: discord.Interaction, time: str, timezone: str,
                              channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
+
+    if "am" in time.lower() or "pm" in time.lower():
+        embed = Embed(
+            title="An Error Occurred!",
+            description=f"Select AM or PM in the \"ampm\" option, do not put it in the time selection",
+            color=discord.Colour.red()
+        )
+        await interaction.edit_original_response(embed=embed)
 
     try:
         if ":" not in time:
@@ -278,9 +285,17 @@ async def attempt_daily_send(server):
         current_tuple = (current_time_in_tz.hour, current_time_in_tz.minute)
 
         if current_tuple == scheduled_tuple:
-            channel = client.get_channel(server.get("channel_id"))
-            message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino), view=mv.DinoPostView())
-            await message.create_thread(name=f"Discuss {daily_dino.get('name')}")
+            try:
+                channel = client.get_channel(server.get("channel_id"))
+                message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino), view=mv.DinoPostView())
+                await message.create_thread(name=f"Discuss {daily_dino.get('name')}")
+            except discord.errors.Forbidden as e:
+                print(
+                    f"[red]Bot is missing permissions in guild: [/]{client.get_guild(server.get('guild_id')).name} ({client.get_guild(server.get('guild_id')).id})")
+                return
+            except Exception as e:
+                print(f"Something went wrong in guild: {client.get_guild(server.get('guild_id')).name}!\n{e}")
+
         print(f"Scheduled: {scheduled_tuple}, Current: {current_tuple}")
 
 

@@ -258,6 +258,7 @@ async def error_handler(interaction: discord.Interaction, error):
         await interaction.response.send_message("You do not have permissions to do that.", ephemeral=True)
     else:
         await interaction.response.send_message("An error has occurred!!! DM OccultParrot if you can!", ephemeral=True)
+        print(error)
 
 
 # --- Post Task ---
@@ -296,8 +297,8 @@ async def attempt_daily_send(server):
             except Exception as e:
                 print(f"Something went wrong in guild: {client.get_guild(server.get('guild_id')).name}!\n{e}")
 
-        print(
-            f"{client.get_guild(server.get('guild_id')).name}'s scheduled time: ({scheduled_tuple})  | Current time: {current_tuple}")
+        # print(
+        #     f"{client.get_guild(server.get('guild_id')).name}'s scheduled time: ({scheduled_tuple})  | Current time: {current_tuple}")
 
 
 async def get_daily_dino_task():

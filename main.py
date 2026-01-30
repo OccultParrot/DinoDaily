@@ -127,6 +127,8 @@ async def initialize_command(interaction: discord.Interaction, time: str, timezo
                              channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
 
+    channel = interaction.channel
+
     if "am" in time.lower() or "pm" in time.lower():
         embed = Embed(
             title="An Error Occurred!",

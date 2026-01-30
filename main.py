@@ -109,10 +109,11 @@ async def on_guild_remove(guild: discord.Guild):
 
 
 # --- Set Up Command ---
-@client.tree.command(name="initialize", description="Run this in the channel you want the bot to post in!")
+@client.tree.command(name="initialize", description="Run this to set up the bot for the first time")
 @app_commands.describe(
     time="The time you want the facts displayed at. In HH:MM format!",
     timezone="The timezone the server is in.",
+    channel="The channel to send the messages in.",
     ampm="Select AM or PM for the time."
 )
 @app_commands.choices(
@@ -122,10 +123,9 @@ async def on_guild_remove(guild: discord.Guild):
     ]
 )
 @app_commands.checks.has_permissions(administrator=True)
-async def initialize_command(interaction: discord.Interaction, time: str, timezone: str, ampm: str = None):
+async def initialize_command(interaction: discord.Interaction, time: str, timezone: str,
+                             channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
-
-    channel = interaction.channel
 
     if "am" in time.lower() or "pm" in time.lower():
         embed = Embed(

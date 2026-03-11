@@ -126,7 +126,7 @@ async def initialize_command(interaction: discord.Interaction, time: str, timezo
                              channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
 
-    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+    if not interaction.user.guild_permissions.administrator and interaction.user.id != 767047725333086209:
         embed = Embed(
             title="An Error Occurred!",
             description=f"You do not have permissions to do that! (Administrator permissions required)",
@@ -221,7 +221,7 @@ async def edit_command(interaction: discord.Interaction, time: str = None, timez
 async def remove_command(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
 
-    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+    if not interaction.user.guild_permissions.administrator and interaction.user.id != 767047725333086209:
         embed = Embed(
             title="An Error Occurred!",
             description=f"You do not have permissions to do that! (Administrator permissions required)",
@@ -254,7 +254,7 @@ async def remove_command(interaction: discord.Interaction):
 async def send_daily(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
 
-    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+    if not interaction.user.guild_permissions.administrator and interaction.user.id != 767047725333086209:
         embed = Embed(
             title="An Error Occurred!",
             description=f"You do not have permissions to do that! (Administrator permissions required)",

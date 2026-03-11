@@ -122,10 +122,18 @@ async def on_guild_remove(guild: discord.Guild):
         app_commands.Choice(name="Evening (PM)", value="PM"),
     ]
 )
-@app_commands.checks.has_permissions(administrator=True)
 async def initialize_command(interaction: discord.Interaction, time: str, timezone: str,
                              channel: discord.TextChannel, ampm: str = None):
     await interaction.response.defer(thinking=True, ephemeral=True)
+
+    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+        embed = Embed(
+            title="An Error Occurred!",
+            description=f"You do not have permissions to do that! (Administrator permissions required)",
+            color=discord.Colour.red()
+        )
+        await interaction.edit_original_response(embed=embed)
+        return
 
     if "am" in time.lower() or "pm" in time.lower():
         embed = Embed(
@@ -210,9 +218,18 @@ async def edit_command(interaction: discord.Interaction, time: str = None, timez
 # --- Remove Command ---
 @client.tree.command(name="remove-server",
                      description="Run this to disable the bot. Also occurs when kicking bot from the server.")
-@app_commands.checks.has_permissions(administrator=True)
 async def remove_command(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
+
+    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+        embed = Embed(
+            title="An Error Occurred!",
+            description=f"You do not have permissions to do that! (Administrator permissions required)",
+            color=discord.Colour.red()
+        )
+        await interaction.edit_original_response(embed=embed)
+        return
+
     for server in servers:
         if server.get("guild_id") == interaction.guild.id:
             db.remove_server(server.get("guild_id"))
@@ -234,9 +251,18 @@ async def remove_command(interaction: discord.Interaction):
 
 @client.tree.command(name="send-daily",
                      description="Run this to send the dino message to the server")
-@app_commands.checks.has_permissions(administrator=True)
 async def send_daily(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
+
+    if not interaction.user.guild_permissions.administrator or interaction.user.id != 767047725333086209:
+        embed = Embed(
+            title="An Error Occurred!",
+            description=f"You do not have permissions to do that! (Administrator permissions required)",
+            color=discord.Colour.red()
+        )
+        await interaction.edit_original_response(embed=embed)
+        return
+
     for server in servers:
         if server.get("guild_id") == interaction.guild.id:
             await client.get_channel(server.get("channel_id")).send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino))

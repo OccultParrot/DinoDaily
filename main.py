@@ -108,6 +108,39 @@ async def on_guild_remove(guild: discord.Guild):
     refresh_cache()
 
 
+@client.event
+async def on_message(message: discord.Message):
+    # Only trigger if the message is "rebuild application" and is sent by me (OWNER_ID),
+    # this is to prevent random users from spamming it and breaking the bot
+    if message.author != os.getenv("OWNER_ID") and message.content.lower() != "rebuild application":
+        return
+
+    # Remove the trigger message to keep channels clean
+    await message.delete()
+
+    response = requests.post(
+        "https://backboard.railway.com/graphql/v2",
+        headers={
+            "Authorization": f"Bearer {os.environ['RAILWAY_TOKEN']}",
+            "Content-Type": "application/json",
+        },
+        json={
+            "query": """mutation deploymentRedeploy($id: String!) {
+deploymentRedeploy(id: $id) {
+  id
+  status
+}
+}""",
+            "variables": {
+                "id": "deployment-id"
+            },
+        },
+    )
+
+    data = response.json()
+
+
+
 # --- Set Up Command ---
 @client.tree.command(name="initialize", description="Run this to set up the bot for the first time")
 @app_commands.describe(
@@ -348,8 +381,14 @@ def parse_daily_dino(dino: dict) -> Optional[Dict]:
     soup = BeautifulSoup(requests.get(dino['href'], headers={'User-Agent': 'DinoDaily/1.0 (Testing purposes)'}).text,
                          "html.parser")
     info_box = soup.find("table", {"class": "infobox"})
-    img = info_box.find_next('img')
-    print(img)
+    
+    try:
+        img = info_box.find_next('img')
+        print(img)
+    except AttributeError as e:
+        print(f"No image found for {dino.get('name')}, skipping.\n{e}")
+        img = None
+
     if not page.exists():
         print(f"page '{dino.get('name')}' not found")
         return None

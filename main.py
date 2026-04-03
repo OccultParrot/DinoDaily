@@ -306,7 +306,7 @@ async def send_daily(interaction: discord.Interaction):
                                                          description="Hmm, the server is not quite set up, try running `/initialize`!"))
 
 
-@client.tree.command("send-random-dino", description="Run this to send a random dino message to the server")
+@client.tree.command(name="send-random-dino", description="Run this to send a random dino message to the server")
 async def send_random_dino(interaction: discord.Interaction):
     await interaction.response.defer(thinking=True, ephemeral=True)
 

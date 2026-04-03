@@ -381,6 +381,10 @@ def parse_daily_dino(dino: dict) -> Optional[Dict]:
     soup = BeautifulSoup(requests.get(dino['href'], headers={'User-Agent': 'DinoDaily/1.0 (Testing purposes)'}).text,
                          "html.parser")
     info_box = soup.find("table", {"class": "infobox"})
+
+    if not info_box:
+        print(f"No infobox found for {dino.get('name')}, skipping.")
+        return None
     
     try:
         img = info_box.find_next('img')

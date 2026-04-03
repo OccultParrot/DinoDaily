@@ -140,7 +140,6 @@ deploymentRedeploy(id: $id) {
     data = response.json()
 
 
-
 # --- Set Up Command ---
 @client.tree.command(name="initialize", description="Run this to set up the bot for the first time")
 @app_commands.describe(
@@ -307,6 +306,31 @@ async def send_daily(interaction: discord.Interaction):
                                                          description="Hmm, the server is not quite set up, try running `/initialize`!"))
 
 
+@client.tree.command("send-random-dino", description="Run this to send a random dino message to the server")
+async def send_random_dino(interaction: discord.Interaction):
+    await interaction.response.defer(thinking=True, ephemeral=True)
+
+    if not interaction.user.guild_permissions.administrator and interaction.user.id != 767047725333086209:
+        embed = Embed(
+            title="An Error Occurred!",
+            description=f"You do not have permissions to do that! (Administrator permissions required)",
+            color=discord.Colour.red()
+        )
+        await interaction.edit_original_response(embed=embed)
+        return
+
+    for server in servers:
+        if server.get("guild_id") == interaction.guild.id:
+            await client.get_channel(server.get("channel_id")).send(
+                embeds=dinoInfo.get_dino_fact_embeds(parse_daily_dino(db.get_random_dino())))
+            await interaction.edit_original_response(embed=Embed(title="Successfully Sent Dino Message!",
+                                                                 description="Check the channel to see the new message"))
+            return
+
+    await interaction.edit_original_response(embed=Embed(title="Server not set up",
+                                                         description="Hmm, the server is not quite set up, try running `/initialize`!"))
+
+
 # --- Error Handling ---
 @initialize_command.error
 @edit_command.error
@@ -385,7 +409,7 @@ def parse_daily_dino(dino: dict) -> Optional[Dict]:
     if not info_box:
         print(f"No infobox found for {dino.get('name')}, skipping.")
         return None
-    
+
     try:
         img = info_box.find_next('img')
         print(img)

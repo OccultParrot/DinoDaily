@@ -38,6 +38,8 @@ CACHE_REFRESH_INTERVAL = 60 * 60 * 5
 servers = []
 daily_dino: dict = {}
 
+last_sent: Dict[int, tuple] = {}
+
 interesting_sections = {
     'description': ["description", "distinguishing features", "appearance"],
     'discovery': ["discovery and naming", 'discovery', 'history of discovery', 'fossil history', 'history'],
@@ -369,6 +371,12 @@ async def attempt_daily_send(server):
         current_tuple = (current_time_in_tz.hour, current_time_in_tz.minute)
 
         if current_tuple == scheduled_tuple:
+            guild_id = server.get("guild_id")
+            if last_sent.get(guild_id) == current_tuple:
+                return  # Already sent for this time, skip
+
+            last_sent[guild_id] = current_tuple
+
             try:
                 channel = client.get_channel(server.get("channel_id"))
                 message = await channel.send(embeds=dinoInfo.get_dino_fact_embeds(daily_dino), view=mv.DinoPostView())
